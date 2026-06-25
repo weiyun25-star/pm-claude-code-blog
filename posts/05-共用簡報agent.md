@@ -19,7 +19,7 @@ presentation-templates/
 ├── README.md
 ├── templates/
 │   ├── MANIFEST.md          範本清單，記錄每一版的用途
-│   └── v3-uni-pic-2026/     實際的範本檔案（pptx）
+│   └── v3-corporate-2026/   實際的範本檔案（pptx）
 └── agents/
     └── presentation-agent.md   簡報 agent 的行為說明
 ```
