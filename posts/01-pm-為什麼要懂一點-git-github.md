@@ -24,6 +24,33 @@ GitHub = 存放 repo 的雲端服務（讓 repo 不只活在你電腦裡）
 
 當我去查自己 GitHub 帳號底下到底有什麼，發現竟然已經累積了 7 個倉庫：pm-workspace、insurance、learnhub、coffee-personality-quiz、resume-grace、weeklybm_tool、practice。每一個都是我曾經做過的案子或專案，只是我從來沒有意識到「它們各自是一個獨立被 Git 追蹤的資料夾」。
 
+## 步驟教學：怎麼檢查自己手上的資料夾是不是一個 git repo
+
+如果你也想知道自己電腦裡某個資料夾，到底是不是被 Git 追蹤的 repo，可以照著做一次：
+
+1. 打開終端機（Terminal／命令提示字元），用 `cd` 移動到你想檢查的資料夾，例如：
+   ```
+   cd /workspace/project/insurance
+   ```
+2. 輸入以下指令，看看這個資料夾裡有沒有隱藏的 `.git` 資料夾：
+   ```
+   ls -la
+   ```
+   如果列出的清單裡看到一個叫 `.git` 的資料夾，代表這裡**是**一個 git repo；沒有的話，它就只是一般的資料夾。
+3. 如果確認是 repo，再輸入以下指令，看看這個 repo 連到 GitHub 上的哪個倉庫：
+   ```
+   git remote -v
+   ```
+   會看到類似這樣的輸出：
+   ```
+   origin  https://github.com/你的帳號/倉庫名稱.git (fetch)
+   origin  https://github.com/你的帳號/倉庫名稱.git (push)
+   ```
+   這就是這個資料夾「真正對應」的 GitHub 倉庫——以後在這個資料夾做的任何 commit、push，都會送到這個網址。
+4. 如果想看自己 GitHub 帳號底下總共有幾個倉庫，且本機沒有安裝對應工具，最直接的方式是打開瀏覽器，登入 GitHub，到自己的 Profile 頁面點「Repositories」，就會列出全部清單。
+
+照著做一次之後，你大概就能掌握「我手上這些資料夾，到底哪些是被 Git 管理的，分別連到哪個倉庫」。
+
 ## 心得
 
 PM 不需要會寫程式，但理解「資料怎麼被追蹤、怎麼上雲端」這套邏輯，其實很重要，原因有兩個：
