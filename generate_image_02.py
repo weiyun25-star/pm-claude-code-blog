@@ -60,12 +60,12 @@ for i, (name, bg, border) in enumerate(messy):
                          facecolor=bg, edgecolor=border, linewidth=1.2)
     ax.add_patch(box)
     ax.text(2.2, y, name, ha="center", va="center",
-            fontsize=9.5, color="#444", fontfamily=FONT_TC)
+            fontsize=12, color="#444", fontfamily=FONT_TC)
 
 # ── 中間箭頭 ──────────────────────────────────────────────────
 ax.annotate("", xy=(6.8, 2.5), xytext=(5.2, 2.5),
             arrowprops=dict(arrowstyle="-|>", color="#3b5bdb", lw=2.5))
-ax.text(6.0, 2.78, "整理後", ha="center", fontsize=10.5,
+ax.text(6.0, 2.78, "整理後", ha="center", fontsize=12,
         color="#3b5bdb", fontweight="bold", fontfamily=FONT_TC)
 
 # ── 整理後（右欄）────────────────────────────────────────────
@@ -86,7 +86,7 @@ for i, (local, repo, bg, border) in enumerate(clean):
                          facecolor=bg, edgecolor=border, linewidth=1.2)
     ax.add_patch(box)
     ax.text(7.15, y, local, ha="left", va="center",
-            fontsize=9.5, color="#2e7d32", fontfamily=FONT_TC)
+            fontsize=12, color="#2e7d32", fontfamily=FONT_TC)
 
 # ── 底部原則說明 ──────────────────────────────────────────────
 banner = FancyBboxPatch((0.25, 0.1), 11.5, 0.52,
@@ -95,7 +95,7 @@ banner = FancyBboxPatch((0.25, 0.1), 11.5, 0.52,
 ax.add_patch(banner)
 ax.text(6, 0.365,
         "資料夾命名 ＝ 倉庫名稱　→　你自己、同事、AI agent 看到名稱就知道它對應哪個倉庫",
-        ha="center", va="center", fontsize=10, color="#3b5bdb",
+        ha="center", va="center", fontsize=12, color="#3b5bdb",
         fontfamily=FONT_TC, fontweight="bold")
 
 plt.tight_layout(pad=0.3)
@@ -141,9 +141,12 @@ img_block = (
     f'</figure>\n'
 )
 
-# 插入第一個 <h2> 前
-target = "<h2>"
-updated = content.replace(target, img_block + target, 1)
+# 替換現有圖片 src，避免重複插圖
+old_src = re.search(r'src="([^"]*folder-repo-diagram[^"]*)"', content)
+if old_src:
+    updated = content.replace(old_src.group(1), image_url)
+else:
+    updated = content.replace("<h2>", img_block + "<h2>", 1)
 
 resp = requests.post(
     f"{WP_URL}/wp-json/wp/v2/posts/{POST_ID}",

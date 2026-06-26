@@ -77,7 +77,7 @@ for name, x, y, angle, fg, bg in folders:
     ax.add_patch(ear)
 
     ax.text(x, y, name, ha="center", va="center",
-            fontsize=8.5, color=fg, fontfamily=FONT_TC,
+            fontsize=12, color=fg, fontfamily=FONT_TC,
             fontweight="bold", zorder=4,
             transform=t)
 
@@ -121,42 +121,31 @@ r = requests.get(f"{WP_URL}/wp-json/wp/v2/posts/{POST_ID}",
                  auth=(WP_USER, WP_APP_PASS), timeout=20)
 content = r.json()["content"]["rendered"]
 
-# ── 移除現有的對照圖 figure ───────────────────────────────────
-fig_pattern = r'\n?<figure[^>]*class="wp-block-image[^"]*"[^>]*>.*?</figure>\n?'
-content_clean = re.sub(fig_pattern, '', content, count=1, flags=re.DOTALL)
-
-# ── 對照圖 block（移到步驟教學前）────────────────────────────
-diagram_block = (
-    '\n<figure class="wp-block-image size-large" '
-    'style="margin:2em 0;text-align:center;">'
-    f'<img src="{DIAGRAM_URL}" '
-    'alt="本機資料夾與 GitHub 倉庫整理前後對比" '
-    'style="max-width:100%;border-radius:12px;'
-    'box-shadow:0 2px 12px rgba(0,0,0,0.08);"/>'
-    '<figcaption style="font-size:0.85em;color:#888;margin-top:8px;">'
-    '整理前：路徑亂、名稱對不起來　→　整理後：全部在 repos/ 底下，名稱對應倉庫</figcaption>'
-    '</figure>\n'
-)
-
-# 找「步驟教學」H2 並在前面插對照圖
-content_with_diagram = re.sub(
-    r'(<h2[^>]*>步驟教學[^<]*</h2>)',
-    diagram_block + r'\1',
-    content_clean,
-    count=1,
-)
-
-# ── 底圖 block（插到第一個 H2 前）────────────────────────────
-hero_block = (
-    '\n<figure class="wp-block-image size-large" '
-    'style="margin:0 0 2em;text-align:center;">'
-    f'<img src="{hero_url}" '
-    'alt="散亂的專案資料夾示意圖——PM的AI應用旅程系列" '
-    'style="max-width:100%;border-radius:12px;'
-    'box-shadow:0 4px 20px rgba(0,0,0,0.15);"/>'
-    '</figure>\n'
-)
-final_content = content_with_diagram.replace("<h2>", hero_block + "<h2>", 1)
+# 替換 hero 圖 src（避免重複插圖）
+hero_src = re.search(r'src="([^"]*folder-chaos-hero[^"]*)"', content)
+if hero_src:
+    final_content = content.replace(hero_src.group(1), hero_url)
+else:
+    # 首次插入：移除舊圖、重新排版
+    fig_pattern = r'\n?<figure[^>]*class="wp-block-image[^"]*"[^>]*>.*?</figure>\n?'
+    content_clean = re.sub(fig_pattern, '', content, count=1, flags=re.DOTALL)
+    diagram_block = (
+        '\n<figure class="wp-block-image size-large" style="margin:2em 0;text-align:center;">'
+        f'<img src="{DIAGRAM_URL}" alt="本機資料夾與 GitHub 倉庫整理前後對比" '
+        'style="max-width:100%;border-radius:12px;box-shadow:0 2px 12px rgba(0,0,0,0.08);"/>'
+        '</figure>\n'
+    )
+    content_with_diagram = re.sub(
+        r'(<h2[^>]*>步驟教學[^<]*</h2>)',
+        diagram_block + r'\1', content_clean, count=1,
+    )
+    hero_block = (
+        '\n<figure class="wp-block-image size-large" style="margin:0 0 2em;text-align:center;">'
+        f'<img src="{hero_url}" alt="散亂的專案資料夾示意圖——PM的AI應用旅程系列" '
+        'style="max-width:100%;border-radius:12px;box-shadow:0 4px 20px rgba(0,0,0,0.15);"/>'
+        '</figure>\n'
+    )
+    final_content = content_with_diagram.replace("<h2>", hero_block + "<h2>", 1)
 
 # ── 更新文章 ──────────────────────────────────────────────────
 resp = requests.post(

@@ -1,7 +1,8 @@
 ---
-title: 讓所有專案共用同一個「簡報 agent」——跨專案工具的正確管理方式
+title: PM的AI應用旅程(五)：讓所有專案共用同一個「簡報 agent」
 description: 當某個工具所有案子都要用，該複製進每個專案還是集中維護？這篇說明如何用獨立 Git 倉庫建立共用 agent，以及「複製 vs. 引用」的判斷標準。
 keywords: AI agent 共用範本, 跨專案工具管理, 簡報 agent PM, git 共用倉庫, 複製 vs 引用工具
+slug: pm-ai-journey-05-shared-agent
 ---
 
 # 讓所有專案共用同一個「簡報 agent」

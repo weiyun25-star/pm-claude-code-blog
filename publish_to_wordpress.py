@@ -19,11 +19,11 @@ WP_USER     = "weiyun"
 WP_APP_PASS = "LgWn IvQn mkmS JxlK AKVN Wask"
 
 # "publish" 直接發佈；"draft" 存為草稿（建議先用 draft 確認後再改）
-POST_STATUS = "publish"
+POST_STATUS = "draft"
 
 # 要發佈的檔案清單（依序）；改這裡控制要發哪幾篇
 POSTS_DIR = Path(__file__).parent / "posts"
-POST_FILES = sorted(POSTS_DIR.glob("04-*.md"))
+POST_FILES = sorted(POSTS_DIR.glob("05-*.md"))
 # ─────────────────────────────────────────────────────────
 
 # ── 樣式常數 ──────────────────────────────────────────────
@@ -187,7 +187,19 @@ def apply_styles(html):
 # ─────────────────────────────────────────────────────────
 
 
-def publish_post(title, html_content, excerpt="", status=POST_STATUS):
+def make_slug(meta, path):
+    """取 frontmatter slug，或從檔名提取英數字元產生 fallback slug"""
+    if meta.get("slug"):
+        return meta["slug"].strip()
+    # 檔名去掉副檔名後，把中文/全形符號全部去掉，只留英數字與連字號
+    stem = path.stem  # e.g. "05-共用簡報agent"
+    ascii_only = re.sub(r'[^\x00-\x7F]+', '', stem)          # 移除非 ASCII
+    cleaned = re.sub(r'[^a-zA-Z0-9\-]+', '-', ascii_only)    # 非英數換成 -
+    cleaned = re.sub(r'-{2,}', '-', cleaned).strip('-').lower()
+    return cleaned or "post"
+
+
+def publish_post(title, html_content, excerpt="", slug="", status=POST_STATUS):
     """透過 WordPress REST API 發佈一篇文章"""
     url = f"{WP_URL}/wp-json/wp/v2/posts"
     payload = {
@@ -196,6 +208,7 @@ def publish_post(title, html_content, excerpt="", status=POST_STATUS):
         "excerpt": excerpt,
         "status":  status,
         "format":  "standard",
+        "slug":    slug,
     }
     resp = requests.post(
         url,
@@ -219,10 +232,12 @@ def main():
 
         title   = meta.get("title", path.stem)
         excerpt = meta.get("description", "")
+        slug    = make_slug(meta, path)
+        print(f"  slug：{slug}")
 
         html = md_to_html(content)
         html = apply_styles(html)
-        resp = publish_post(title, html, excerpt)
+        resp = publish_post(title, html, excerpt, slug)
 
         if resp.status_code in (200, 201):
             data = resp.json()

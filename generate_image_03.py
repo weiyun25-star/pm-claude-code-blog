@@ -50,17 +50,17 @@ ax.add_patch(bar)
 for i, c in enumerate(["#ff5f57","#febc2e","#28c840"]):
     ax.add_patch(plt.Circle((1.1 + i*0.32, 4.62), 0.1, color=c, zorder=5))
 ax.text(6, 4.62, "Terminal — bash", ha="center", va="center",
-        fontsize=9, color="#888", fontfamily=FTC)
+        fontsize=12, color="#888", fontfamily=FTC)
 
 # ── 指令行 ───────────────────────────────────────────────────
 lines = [
-    (1.0, 3.95, "$ git remote -v", "#7ec8e3", 10.5, "normal"),
+    (1.0, 3.95, "$ git remote -v", "#7ec8e3", 12, "normal"),
     (1.0, 3.35,
      "origin  https://ghp_Ab3xK7mNqR2sT9vW1yZ0pL4uJ6cF8dE5iG:x-oauth-basic@github.com/weiyun/pm-workspace.git",
-     "#ff6b6b", 10, "normal"),
+     "#ff6b6b", 12, "normal"),
     (1.0, 2.85,
      "                                    ↑ Token 就這樣明文夾在網址裡",
-     "#ffb74d", 9.5, "italic"),
+     "#ffb74d", 12, "italic"),
 ]
 for lx, ly, txt, col, fs, sty in lines:
     ax.text(lx, ly, txt, ha="left", va="center",
@@ -75,13 +75,13 @@ warn = FancyBboxPatch((0.85, 1.0), 10.3, 1.55,
 ax.add_patch(warn)
 ax.text(1.35, 2.32, "⚠", fontsize=20, color="#ff4444", va="center")
 ax.text(1.9, 2.38, "任何看到這行網址的人，都能用你的身份操作 GitHub",
-        fontsize=11, color="#ff8888", fontfamily=FTC, va="center", fontweight="bold")
+        fontsize=12, color="#ff8888", fontfamily=FTC, va="center", fontweight="bold")
 ax.text(1.9, 1.88,
         "立即處理：GitHub → Settings → Developer settings → Personal access tokens → Revoke",
-        fontsize=9, color="#ffb3b3", fontfamily=FTC, va="center")
+        fontsize=12, color="#ffb3b3", fontfamily=FTC, va="center")
 ax.text(1.9, 1.52,
         "撤銷後再請 AI agent 把所有 remote URL 改成安全的 HTTPS 或 SSH 格式",
-        fontsize=9, color="#ffb3b3", fontfamily=FTC, va="center")
+        fontsize=12, color="#ffb3b3", fontfamily=FTC, va="center")
 
 plt.tight_layout(pad=0)
 fig.savefig(IMG_PATH, dpi=150, bbox_inches="tight", facecolor=fig.get_facecolor())
@@ -112,7 +112,11 @@ img_block = (
     f'style="max-width:100%;border-radius:12px;box-shadow:0 4px 20px rgba(0,0,0,0.2);"/>'
     f'</figure>\n'
 )
-final = content.replace("<h2>", img_block + "<h2>", 1)
+old_src = re.search(r'src="([^"]*token-leak-hero[^"]*)"', content)
+if old_src:
+    final = content.replace(old_src.group(1), img_url)
+else:
+    final = content.replace("<h2>", img_block + "<h2>", 1)
 
 resp = requests.post(f"{WP_URL}/wp-json/wp/v2/posts/{POST_ID}",
                      auth=(WP_USER, WP_APP_PASS),

@@ -67,12 +67,12 @@ for i, (title, desc, color, bg) in enumerate(steps):
     ax.add_patch(plt.Circle((x + card_w / 2, card_y + card_h - 0.38),
                              0.28, color=color, zorder=4))
     ax.text(x + card_w / 2, card_y + card_h - 0.38, str(i + 1),
-            ha="center", va="center", fontsize=11, fontweight="bold",
+            ha="center", va="center", fontsize=12, fontweight="bold",
             color="#1a1a2e", zorder=5)
 
     # 標題
     ax.text(x + card_w / 2, card_y + card_h - 0.92, title,
-            ha="center", va="center", fontsize=11, fontweight="bold",
+            ha="center", va="center", fontsize=12, fontweight="bold",
             color=color, fontfamily=FTC, zorder=4)
 
     # 分隔線
@@ -83,13 +83,13 @@ for i, (title, desc, color, bg) in enumerate(steps):
     # 說明文字
     for j, line in enumerate(desc.split("\n")):
         ax.text(x + card_w / 2, card_y + card_h - 1.55 - j * 0.5, line,
-                ha="center", va="center", fontsize=9.5, color="#cccccc",
+                ha="center", va="center", fontsize=12, color="#cccccc",
                 fontfamily=FTC, zorder=4)
 
     # 標籤（範本覆蓋提示）
     ax.text(x + card_w / 2, card_y + 0.28,
             "範本已涵蓋",
-            ha="center", va="center", fontsize=8, color=color,
+            ha="center", va="center", fontsize=12, color=color,
             fontfamily=FTC, alpha=0.75,
             bbox=dict(boxstyle="round,pad=0.2", facecolor=bg,
                       edgecolor=color, linewidth=0.8, alpha=0.9))
@@ -105,7 +105,7 @@ for i, (title, desc, color, bg) in enumerate(steps):
 # 底部說明
 ax.text(6.5, 0.82,
         "每一步都有對應的 agent 規則和 SOP 範本——不用每次重新想，照著走就對了",
-        ha="center", va="center", fontsize=10, color="#adb5bd",
+        ha="center", va="center", fontsize=12, color="#adb5bd",
         fontfamily=FTC, style="italic")
 
 plt.tight_layout(pad=0)

@@ -40,12 +40,12 @@ def card(ax, x, y, w, h, bg, border, emoji, title, title_color, sub, lines):
     ax.text(x + w/2, y + h - 1.15, title, ha="center", va="center",
             fontsize=15, fontweight="bold", color=title_color, fontfamily=FONT_TC)
     ax.text(x + w/2, y + h - 1.6, sub, ha="center", va="center",
-            fontsize=10, color="#555555", fontfamily=FONT_TC)
+            fontsize=12, color="#555555", fontfamily=FONT_TC)
     ax.axhline(y=y + h - 1.85, xmin=(x + 0.18)/11, xmax=(x + w - 0.18)/11,
                color=border, linewidth=0.8, alpha=0.5)
     for i, line in enumerate(lines):
         ax.text(x + w/2, y + h - 2.35 - i*0.45, line, ha="center", va="center",
-                fontsize=9.5, color="#666666", fontfamily=FONT_TC)
+                fontsize=12, color="#666666", fontfamily=FONT_TC)
 
 # 三張卡片
 card(ax, 0.3, 0.7, 2.8, 3.8, "#ffffff", "#d0d7e8",
@@ -63,13 +63,13 @@ card(ax, 7.9, 0.7, 2.8, 3.8, "#ffffff", "#b2f2bb",
 # 箭頭：Git → Repo（管理）
 ax.annotate("", xy=(4.05, 2.6), xytext=(3.15, 2.6),
             arrowprops=dict(arrowstyle="-|>", color="#3b5bdb", lw=2))
-ax.text(3.6, 2.78, "管理", ha="center", fontsize=10,
+ax.text(3.6, 2.78, "管理", ha="center", fontsize=12,
         color="#3b5bdb", fontweight="bold", fontfamily=FONT_TC)
 
 # 箭頭：Repo → GitHub（push 同步）
 ax.annotate("", xy=(7.85, 2.6), xytext=(6.95, 2.6),
             arrowprops=dict(arrowstyle="-|>", color="#2f9e44", lw=2))
-ax.text(7.4, 2.78, "push", ha="center", fontsize=10,
+ax.text(7.4, 2.78, "push", ha="center", fontsize=12,
         color="#2f9e44", fontweight="bold", fontfamily=FONT_TC)
 
 # 底部說明橫幅
@@ -79,7 +79,7 @@ banner = FancyBboxPatch((0.3, 0.05), 10.4, 0.58,
 ax.add_patch(banner)
 ax.text(5.5, 0.355,
         "commit ＝ 存檔（只存本機）　　push ＝ 上傳雲端（同步到 GitHub）　　兩個動作分開，commit 完不會自動 push",
-        ha="center", va="center", fontsize=9.5, color="#444444", fontfamily=FONT_TC)
+        ha="center", va="center", fontsize=12, color="#444444", fontfamily=FONT_TC)
 
 # 主標題
 ax.text(5.5, 4.88, "Git ／ Repo ／ GitHub 的關係",
@@ -141,7 +141,11 @@ img_block = (
     f'</figure>\n'
 )
 
-if "<h2>" in existing_content:
+import re as _re
+old_src = _re.search(r'src="([^"]*git-repo-github-diagram[^"]*)"', existing_content)
+if old_src:
+    updated_content = existing_content.replace(old_src.group(1), image_url)
+elif "<h2>" in existing_content:
     updated_content = existing_content.replace("<h2>", img_block + "<h2>", 1)
 else:
     updated_content = img_block + existing_content
