@@ -1,5 +1,5 @@
 ---
-title: PM 不小心把 GitHub Token 寫死在設定裡——資安教訓與處理步驟
+title: PM的AI應用旅程(三)：我不小心把 GitHub Token 寫死在設定裡
 description: 一行 git remote URL 裡夾著一串 token，任何看到它的人都能用你的身份操作 GitHub。這篇記錄 PM 如何發現、撤銷並全面清查所有專案資料夾的完整過程。
 keywords: GitHub Token 洩漏, git remote token 資安, PM 資安教訓, credential helper 設定, GitHub 驗證方式
 ---

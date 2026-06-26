@@ -1,5 +1,5 @@
 ---
-title: PM 為什麼要懂一點 Git 和 GitHub？非工程背景完整解析
+title: PM的AI應用旅程(一)：PM 為什麼要懂一點 Git／GitHub？
 description: 一個 PM 從完全不懂 git 開始，透過 AI agent 搞懂 repo、commit、push 的基本邏輯。整理了 PM 需要知道的 Git 核心概念，以及跟工程師溝通的共同語言。
 keywords: PM 學 Git, PM 學 GitHub, 非工程背景版本控制, git 入門 PM, commit push 差別
 ---
